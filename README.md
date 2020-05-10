@@ -16,7 +16,7 @@ Add SSL for **single** instance AWS Elastic Beanstalk Services.
 
 - Clone your environment using eb init and eb labs download
 - Clone this repository
-- Move 00_ssl_setup_certbot.sh into ./platform/hooks/postdeploy
+- Move either shell script into ./platform/hooks/postdeploy
 - Copy both .ebextensions and .platform into your environment
 - Run eb deploy
 
