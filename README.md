@@ -10,6 +10,7 @@ Add SSL for **single** instance AWS Elastic Beanstalk Services.
   - CERTBOT_CERT_NAME (Name of your certificate)
   - CERTBOT_EMAIL (E-mail to attach to certificate)
   - CERTBOT_DOMAIN_LIST (Comma separated domain list)
+- [Optional] CNAME to your EB environment URL
 
 ## Usage
 
