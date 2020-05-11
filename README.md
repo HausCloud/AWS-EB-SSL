@@ -42,3 +42,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 - [russau](https://github.com/russau): platform hooks [documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/platforms-linux-extend.html)
 - Inspiration: Lack of documentation or solutions regarding easy SSL setup for EB environments
+- Note: In load balanced enviroments, please use eb labs 

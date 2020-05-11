@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# Install SSL
+# Postdeploy hook to setup SSL simple version
+set -euf -o pipefail
 
 # Auto allow yes for all yum install
 # Suggestion: Remove after deployment
-echo 'assumeyes=1' | tee -a /etc/yum.conf
+if ! grep -q 'assumeyes=1' /etc/yum.conf; then
+    echo 'assumeyes=1' | tee -a /etc/yum.conf
+fi
 
 if ! [ -x "$(command -v certbot)" ]; then
     # Enable EPEL
