@@ -17,10 +17,10 @@ if ! [ -x "$(command -v certbot)" ]; then
         yum-config-manager --enable epel
     fi
 
-    #yum install certbot python2-certbot-apache
     yum install certbot python2-certbot-nginx
 fi
 
 # Install SSL for nginx
-certbot --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email
-#certbot --apache --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email
+if [ -z "${CERTBOT_CERT_NAME+x}" ] && [ -z "${CERTBOT_EMAIL+x}" ] && [ -z "${CERTBOT_DOMAIN_LIST+x}" ]; then
+    certbot --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive
+fi

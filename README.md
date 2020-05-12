@@ -15,8 +15,8 @@ Add SSL for **single** instance AWS Elastic Beanstalk Services.
 ## Usage
 
 - Clone your environment using eb init and eb labs download
-- Clone this repository
-- Move either shell script into ./platform/hooks/postdeploy
+- Clone this repo
+- Choose a script in ./platform/hooks/postdeploy and delete the other
 - Copy both .ebextensions and .platform into your environment
 - Run eb deploy
 

@@ -5,11 +5,12 @@ set -euf -o pipefail
 original_string=$(echo "elif [ -f /etc/redhat-release ]" | sed -e 's/[]\/$*.^[]/\\&/g')
 new_string=$(echo "elif [ -f /etc/redhat-release ] || grep -q "PRETTY_NAME=\"Amazon Linux 2\"" /etc/os-release || grep -q 'cpe:.*:amazon_linux:2' /etc/os-release" | sed -e 's/[]\/$*.^[]/\\&/g')
 http_string='^http\s*{$'
-bucket_increase='http {\nserver_names_hash_bucket_size  128;\n'
+bucket_increase='http {\nserver_names_hash_bucket_size 300;\n'
 
 # Auto allow yes for all yum install
 # Suggestion: Remove after deployment
-if ! grep -q 'assumeyes=1' /etc/yum.conf; then
+if ! grep -q 'assumeyes=1' /etc/yum.conf;
+then
     echo 'assumeyes=1' | sudo tee -a /etc/yum.conf
 fi
 
@@ -17,7 +18,8 @@ fi
 sed -i "s/$http_string/$bucket_increase/g" /etc/nginx/nginx.conf
 
 # Install certbot-auto
-if ! [ -f "/usr/local/bin/certbot-auto" ]; then
+if ! [ -f "/usr/local/bin/certbot-auto" ];
+then
     wget https://dl.eff.org/certbot-auto
     mv certbot-auto /usr/local/bin/certbot-auto
     chown root /usr/local/bin/certbot-auto
@@ -28,13 +30,17 @@ if ! [ -f "/usr/local/bin/certbot-auto" ]; then
     sed -i "s/${original_string}/${new_string}/g" /usr/local/bin/certbot-auto
 fi
 
-if /usr/local/bin/certbot-auto certificates | grep -q 'No certs found' && ! [ -f "/etc/letsencrypt/live/hauscloud.me/fullchain.pem" ] && ! [ -f "/etc/letsencrypt/live/hauscloud.me/privkey.pem" ]; then
+# Caution: Certificates do persist between deployments
+if [ -f "/usr/local/bin/certbot-auto" ]  &&  [ -z "${CERTBOT_CERT_NAME+x}" ] && [ -z "${CERTBOT_EMAIL+x}" ] && [ -z "${CERTBOT_DOMAIN_LIST+x}" ] && /usr/local/bin/certbot-auto certificates | grep -q 'No certs found';
+then
     # Install SSL for nginx
     # For apache, replace --nginx with --apache
-    if ! /usr/local/bin/certbot-auto --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive; then
+    if ! /usr/local/bin/certbot-auto --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive;
+    then
 	# Workaround to use Python3 for --no-site--packages issue for Python2
 	# Source: https://community.letsencrypt.org/t/how-do-i-specify-the-python-version-when-running-certbot-auto-command/89059
-	if ! USE_PYTHON_3=1 /usr/local/bin/certbot-auto --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive; then
+	if ! USE_PYTHON_3=1 /usr/local/bin/certbot-auto --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive;
+	then
 	    exit 0
 	fi
     fi
