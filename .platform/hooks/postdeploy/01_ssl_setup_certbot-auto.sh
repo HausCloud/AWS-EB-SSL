@@ -30,7 +30,7 @@ then
     sed -i "s/${original_string}/${new_string}/g" /usr/local/bin/certbot-auto
 fi
 
-# Caution: Certificates do persist between deployments
+# Caution: Certificates do persist between deployments with the exception of environment rebuilds
 if [ -f "/usr/local/bin/certbot-auto" ]  &&  [ -z "${CERTBOT_CERT_NAME+x}" ] && [ -z "${CERTBOT_EMAIL+x}" ] && [ -z "${CERTBOT_DOMAIN_LIST+x}" ] && /usr/local/bin/certbot-auto certificates | grep -q 'No certs found';
 then
     # Install SSL for nginx
