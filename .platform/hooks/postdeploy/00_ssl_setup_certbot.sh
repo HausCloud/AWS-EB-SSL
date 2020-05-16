@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Postdeploy hook to setup SSL simple version
-set -euf -o pipefail
+# Bash script to attach to postdeploy hook for SSL
+# Compatible only with Amazon Linux 2 EC2 instances
 
 # Auto allow yes for all yum install
 # Suggestion: Remove after deployment
@@ -8,29 +8,23 @@ if ! grep -q 'assumeyes=1' /etc/yum.conf; then
     echo 'assumeyes=1' | tee -a /etc/yum.conf
 fi
 
+# Increase size of string name for --domains
+if which nginx; then
+    http_string='^http\s*{$'
+    bucket_increase='http {\nserver_names_hash_bucket_size 300;\n'
+    sed -i "s/$http_string/$bucket_increase/g" /etc/nginx/nginx.conf
+fi
+
 # Install EPEL
 # Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-linux-ami-basics.html
 if ! yum list installed epel-release; then
-    if grep -q "PRETTY_NAME=\"Amazon Linux 2\"" /etc/os-release || grep -q 'cpe:.*:amazon_linux:2' /etc/os-release; then
-        yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-    else
-        yum-config-manager --enable epel
-    fi
+    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 fi
 
 if ! [ -x "$(command -v certbot)" ] && yum list installed epel-release; then
-    if which nginx; then
-        yum install certbot python2-certbot-nginx
-    elif which apache || which apache2; then
-        yum install certbot python2-certbot-apache
-    fi
+    yum install certbot python2-certbot-nginx
 fi
 
-# Install SSL
-if [ -z "${CERTBOT_CERT_NAME+x}" ] && [ -z "${CERTBOT_EMAIL+x}" ] && [ -z "${CERTBOT_DOMAIN_LIST+x}" ] && [ -x "$(command -v certbot)" ]; then
-    if which nginx; then
-        certbot --nginx --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive
-    elif which apache || which apache2; then
-        certbot --apache --redirect --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive
-    fi
+if [ ! -z "${CERTBOT_CERT_NAME+x}" ] && [[ -n "$CERTBOT_CERT_NAME" ]] && [ ! -z "${CERTBOT_EMAIL+x}" ] && [[ -n "$CERTBOT_EMAIL" ]] && [ ! -z "${CERTBOT_DOMAIN_LIST+x}" ] && [[ -n "$CERTBOT_DOMAIN_LIST" ]] && [ -x "$(command -v certbot)" ]; then
+    certbot --nginx --redirect --debug --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive
 fi
