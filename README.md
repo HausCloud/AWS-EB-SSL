@@ -15,9 +15,11 @@ Add SSL for **single** instance AWS Elastic Beanstalk enviroments using platform
 ## Usage
 
 - Clone your environment using EB CLI
+    - `eb init && eb labs download`
 - Clone this repository
 - Copy .ebextensions and .platform into your environment
-- Run eb deploy
+- Deploy
+    - `eb deploy`
 
 ## Contributing
 
