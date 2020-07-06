@@ -28,3 +28,13 @@ fi
 if [ ! -z "${CERTBOT_CERT_NAME+x}" ] && [[ -n "$CERTBOT_CERT_NAME" ]] && [ ! -z "${CERTBOT_EMAIL+x}" ] && [[ -n "$CERTBOT_EMAIL" ]] && [ ! -z "${CERTBOT_DOMAIN_LIST+x}" ] && [[ -n "$CERTBOT_DOMAIN_LIST" ]] && [ -x "$(command -v certbot)" ]; then
     certbot --nginx --redirect --debug --cert-name "$CERTBOT_CERT_NAME" -m "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN_LIST" --agree-tos --no-eff-email --keep-until-expiring --non-interactive
 fi
+
+crontab_exists() {
+    crontab -l 2>/dev/null | grep 'certbot -q renew' >/dev/null 2>/dev/null
+}
+if ! crontab_exists ; then
+    systemctl start crond
+    systemctl enable crond
+    line="0 */12 * * * certbot -q renew; systemctl reload nginx.service"
+    (crontab -u root -l; echo "$line" ) | crontab -u root -
+fi
