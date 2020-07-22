@@ -35,6 +35,6 @@ crontab_exists() {
 if ! crontab_exists ; then
     systemctl start crond
     systemctl enable crond
-    line="0 */12 * * * certbot -q renew; systemctl reload nginx.service"
+    line="0 0 */29 * * certbot -q renew; systemctl reload nginx.service"
     (crontab -u root -l; echo "$line" ) | crontab -u root -
 fi
