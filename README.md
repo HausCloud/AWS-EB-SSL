@@ -1,16 +1,17 @@
-# AWS-ElasticBeanstalk-SSL
+# AWS-EB-SSL
 
-Add SSL for **single** instance AWS Elastic Beanstalk enviroments using platform hooks.
+Setup secure **single** instance AWS Elastic Beanstalk environments easily
 
-### Prerequisites
+## Prerequisites
 
-- Sample application deployed on AWS Elastic Beanstalk (only nginx supported)
+- Sample application deployed on AWS Elastic Beanstalk
+  - Only nginx is supported since AWS seems to be shifting towards that configuration (https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html)
 - [EB CLI](https://github.com/aws/aws-elastic-beanstalk-cli-setup)
 - Enviromental variables set using either the EBI CLI or AWS EB management board
   - CERTBOT_CERT_NAME (Name of your certificate)
   - CERTBOT_EMAIL (E-mail to attach to certificate)
   - CERTBOT_DOMAIN_LIST (Comma separated domain list)
-- [Optional] CNAME to your EB environment URL
+- [OPTIONAL] If you have a domain name already, add to CERTBOT_DOMAIN_LIST and point a CNAME to your EB url.
 
 ## Usage
 
@@ -35,6 +36,7 @@ Contributions are what make the open source community such an amazing place to b
 
 - Python 3.7 running on 64bit Amazon Linux 2/3.0.1
 - Node.js 12 running 64bit Amazon Linux 2/5.0.1
+- Ruby 2.7 running on 64bit Amazon Linux 2/3.0.3
 
 ## License
 
@@ -43,5 +45,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 ## Acknowledgments
 
 - [russau](https://github.com/russau): platform hooks [documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/platforms-linux-extend.html)
-- Inspiration: Lack of documentation or solutions regarding easy SSL setup for EB environments
-- Note: In load balanced enviroments, first try the experimental eb labs ssl-
+- [tony-gutierrez]: posted a yaml file that addressed the same issue [gist](https://gist.github.com/tony-gutierrez/198988c34e020af0192bab543d35a62a)
