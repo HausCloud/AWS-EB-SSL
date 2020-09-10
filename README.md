@@ -1,26 +1,39 @@
 # AWS-EB-SSL
-
-Setup secure **single** instance AWS Elastic Beanstalk environments easily
+#### Easy secure **single** instance AWS Elastic Beanstalk environments .. for nginx (say that 3 times fast)
 
 ## Prerequisites
 
-- Sample application deployed on AWS Elastic Beanstalk
-  - Only nginx is supported since AWS seems to be shifting towards that configuration (https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html)
-- [EB CLI](https://github.com/aws/aws-elastic-beanstalk-cli-setup)
-- Enviromental variables set using either the EBI CLI or AWS EB management board
-  - CERTBOT_CERT_NAME (Name of your certificate)
-  - CERTBOT_EMAIL (E-mail to attach to certificate)
-  - CERTBOT_DOMAIN_LIST (Comma separated domain list)
-- [OPTIONAL] If you have a domain name already, add to CERTBOT_DOMAIN_LIST and point a CNAME to your EB url.
+- Deployed sample application
+  - Only platforms configured with **nginx** is supported
+    - Why? EB favors nginx ([docs](https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html)) and super opinionated nginx > apache
+- [**Elastic Beanstalk Command Line Interface**](https://github.com/aws/aws-elastic-beanstalk-cli-setup)
+- [OPTIONAL] Point CNAME at your EB URL (i.e <span>bort-env.eba-2kg3gsq2.us-east-2.elasticbeanstalk.com</span>)
 
 ## Usage
 
-- Clone your environment using EB CLI
-    - `eb init && eb labs download`
-- Clone this repository
-- Copy .ebextensions and .platform into your environment
-- Deploy
-    - `eb deploy`
+1. Pull down your enviroment
+```shell
+# Connect
+eb init
+# Pull down source
+eb labs download
+```
+2. Clone this repo
+
+3. Modify CERTBOT_NAME, CERTBOT_EMAIL, and CERTBOT_DOMAINS in the bash script
+
+4. Copy both **ebextensions** and **platform** folders into your environment
+
+5. Deploy your app
+```
+# Packages into zip and uploads
+eb deploy
+```
+
+## Screenshots
+![Variables](https://github.com/HausCloud/AWS-ElasticBeanstalk-SSL/blob/master/screenshots/certbot.png)
+![Instructions](https://github.com/HausCloud/AWS-ElasticBeanstalk-SSL/blob/master/screenshots/instructions.png)
+![Result](https://github.com/HausCloud/AWS-ElasticBeanstalk-SSL/blob/master/screenshots/secure.png)
 
 ## Contributing
 
@@ -34,9 +47,9 @@ Contributions are what make the open source community such an amazing place to b
 
 ## Tested platforms
 
-- Python 3.7 running on 64bit Amazon Linux 2/3.0.1
-- Node.js 12 running 64bit Amazon Linux 2/5.0.1
-- Ruby 2.7 running on 64bit Amazon Linux 2/3.0.3
+- Python 3.7 running on 64bit Amazon Linux 2/3.1.1
+- Node.js 12 running on 64bit Amazon Linux 2/5.2.1
+- Ruby 2.7 running on 64bit Amazon Linux 2/3.1.1
 
 ## License
 
@@ -44,5 +57,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## Acknowledgments
 
-- [russau](https://github.com/russau): platform hooks [documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/platforms-linux-extend.html)
-- [tony-gutierrez]: posted a yaml file that addressed the same issue [gist](https://gist.github.com/tony-gutierrez/198988c34e020af0192bab543d35a62a)
+- [russau](https://github.com/russau) suggesting [platform hooks](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/platforms-linux-extend.html)
+- [tony-gutierrez](https://github.com/tony-gutierrez) starting this [gist](https://gist.github.com/tony-gutierrez/198988c34e020af0192bab543d35a62a)
