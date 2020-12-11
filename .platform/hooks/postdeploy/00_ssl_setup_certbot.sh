@@ -61,14 +61,6 @@ if ! grep -Fxq "$NAME_LIMIT" /etc/nginx/nginx.conf; then
     fi
 fi
 
-# Prevent certificate installation if not clean sample app
-
-CERT_REGEX="Certificate Name:\s+$CERTBOT_NAME"
-
-if certbot certificates | grep -Ew "$CERT_REGEX"; then
-    log_and_exit 'INFO: Certificate already installed.'
-fi
-
 # Set up certificates
 
 if command -v certbot &>/dev/null; then
