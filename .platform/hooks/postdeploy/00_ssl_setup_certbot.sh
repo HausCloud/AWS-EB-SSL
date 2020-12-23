@@ -1,10 +1,17 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# IMPORTANT: use this bash otherwise following error: "failed with error exit status 127. Stderr:/usr/bin/env: bash: No such file or directory"
+# IMPORTANT: use LF instead of CRLF for .sh files, otherwise following error: "00_ssl_setup_certbot.sh: no such file or directory"
+# IMPORTANT: for LF: also set "* text eol=lf" in ".gitattributes" file otherwise git will convert it into CRLF again on Windows :(
+
+set -euo pipefail
+
 # Postdeploy script for enabling SSL (single instance)
 # Compatible only with Amazon Linux 2 EC2 instances
 
 LOG_PATH=$(find /var/log/ -type f -iname 'eb-hooks.log')
 DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
+# IMPORTANT: no whitespaces in CERTBOT_NAME, otherwise following error: "invalid number of arguments in "ssl_certificate" directive in /etc/nginx/nginx.conf:81"
 CERTBOT_NAME='<certificate_name>'
 CERTBOT_EMAIL='<certificate_email>'
 # Multiple domain example: CERTBOT_DOMAINS='bort.com,www.bort.com,bort-env.eba-2kg3gsq2.us-east-2.elasticbeanstalk.com'

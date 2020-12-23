@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+set -euo pipefail
 
 CONFIG_PATH='/etc/nginx/nginx.conf'
 
