@@ -47,9 +47,10 @@ Contributions are what make the open source community such an amazing place to b
 
 ## Tested platforms
 
-- Python 3.7 running on 64bit Amazon Linux 2/3.1.1
-- Node.js 12 running on 64bit Amazon Linux 2/5.2.1
-- Ruby 2.7 running on 64bit Amazon Linux 2/3.1.1
+- Python 3.7 running on 64bit Amazon Linux 2/3.1.3
+- Node.js 12 running on 64bit Amazon Linux 2/5.2.3
+- Ruby 2.7 running on 64bit Amazon Linux 2/3.2.0
+- Docker running on 64bit Amazon Linux 2/3.2.2
 
 ## License
 
