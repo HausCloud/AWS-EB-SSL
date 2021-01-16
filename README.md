@@ -51,6 +51,7 @@ Contributions are what make the open source community such an amazing place to b
 - Node.js 12 running on 64bit Amazon Linux 2/5.2.3
 - Ruby 2.7 running on 64bit Amazon Linux 2/3.2.0
 - Docker running on 64bit Amazon Linux 2/3.2.2
+- Corretto 11 running on 64bit Amazon Linux 2/3.1.4
 
 ## License
 
