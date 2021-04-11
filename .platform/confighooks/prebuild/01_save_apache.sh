@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-CONFIG_PATH='/etc/nginx/nginx.conf'
+CONFIG_PATH='/etc/httpd/conf/httpd.conf'
 
 # Simple method of keeping configurations between updates. Use in conjuction with postdeploy hook.
-# Save nginx configuration to root's home folder
+# Save apache configuration to root's home folder
 
 if [ -f "$CONFIG_PATH" ]; then
     cp "$CONFIG_PATH" "$HOME"
